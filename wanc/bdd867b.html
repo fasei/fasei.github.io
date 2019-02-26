@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="android,工具,bitmap,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="收集整理了经常使用的关于bitmap的方法,包含按照图片的比例大小压缩、指定尺寸缩放和质量压缩。">
+<meta name="keywords" content="android,工具,bitmap">
+<meta property="og:type" content="article">
+<meta property="og:title" content="bitmap帮助手册">
+<meta property="og:url" content="http://yoursite.com/wanc/bdd867b.html">
+<meta property="og:site_name" content="分分享">
+<meta property="og:description" content="收集整理了经常使用的关于bitmap的方法,包含按照图片的比例大小压缩、指定尺寸缩放和质量压缩。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-26T06:27:26.569Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="bitmap帮助手册">
+<meta name="twitter:description" content="收集整理了经常使用的关于bitmap的方法,包含按照图片的比例大小压缩、指定尺寸缩放和质量压缩。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/wanc/bdd867b.html">
+
+
+
+
+
+  <title>bitmap帮助手册 | 分分享</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">分分享</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/wanc/bdd867b.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wanc">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="分分享">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">bitmap帮助手册</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-24T00:00:00+08:00">
+                2018-03-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p> 收集整理了经常使用的关于bitmap的方法,包含按照图片的比例大小压缩、指定尺寸缩放和质量压缩。</p>
+<a id="more"></a>
+<h2 id="压缩"><a href="#压缩" class="headerlink" title="压缩"></a>压缩</h2><p>压缩可以有三种方式：<br>1、比例压缩<br>2、质量压缩<br>3、比例压缩然后质量压缩</p>
+<h3 id="图片按比例大小压缩方法"><a href="#图片按比例大小压缩方法" class="headerlink" title="图片按比例大小压缩方法"></a>图片按比例大小压缩方法</h3><p>分成三种来源：<br>1、来源为bitmap<br>2、来源为Uri<br>3、来源为图片地址（path）</p>
+<h4 id="直接压缩bitmap"><a href="#直接压缩bitmap" class="headerlink" title="直接压缩bitmap"></a>直接压缩bitmap</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * 图片按比例大小压缩方法</span><br><span class="line">    *</span><br><span class="line">    * @param image （根据Bitmap图片压缩）</span><br><span class="line">    * @return</span><br><span class="line">    */</span><br><span class="line">   public static Bitmap compressScale(Bitmap image) &#123;</span><br><span class="line">       ByteArrayOutputStream baos = new ByteArrayOutputStream();</span><br><span class="line">       image.compress(Bitmap.CompressFormat.JPEG, 100, baos);</span><br><span class="line">       // 判断如果图片大于1M,进行压缩避免在生成图片（BitmapFactory.decodeStream）时溢出</span><br><span class="line">       if (baos.toByteArray().length / 1024 &gt; 1 * 1024) &#123;</span><br><span class="line">           baos.reset();// 重置baos即清空baos</span><br><span class="line">           image.compress(Bitmap.CompressFormat.JPEG, 80, baos);// 这里压缩50%，把压缩后的数据存放到baos中</span><br><span class="line">       &#125;</span><br><span class="line">       ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());</span><br><span class="line">       BitmapFactory.Options newOpts = new BitmapFactory.Options();</span><br><span class="line">       // 开始读入图片，此时把options.inJustDecodeBounds 设回true了</span><br><span class="line">       newOpts.inJustDecodeBounds = true;</span><br><span class="line">       Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, newOpts);</span><br><span class="line">       newOpts.inJustDecodeBounds = false;</span><br><span class="line">       int w = newOpts.outWidth;</span><br><span class="line">       int h = newOpts.outHeight;</span><br><span class="line">       // 现在主流手机比较多是800*480分辨率，所以高和宽我们设置为</span><br><span class="line">       // float hh = 800f;// 这里设置高度为800f</span><br><span class="line">       // float ww = 480f;// 这里设置宽度为480f</span><br><span class="line">       float hh = 100f;</span><br><span class="line">       float ww = 100f;</span><br><span class="line">       // 缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可</span><br><span class="line">       int be = 1;// be=1表示不缩放</span><br><span class="line">       if (w &gt; h &amp;&amp; w &gt; ww) &#123;// 如果宽度大的话根据宽度固定大小缩放</span><br><span class="line">           be = (int) (newOpts.outWidth / ww);</span><br><span class="line">       &#125; else if (w &lt; h &amp;&amp; h &gt; hh) &#123; // 如果高度高的话根据高度固定大小缩放</span><br><span class="line">           be = (int) (newOpts.outHeight / hh);</span><br><span class="line">       &#125;</span><br><span class="line">       if (be &lt;= 0)</span><br><span class="line">           be = 1;</span><br><span class="line">       newOpts.inSampleSize = be; // 设置缩放比例</span><br><span class="line">       // newOpts.inPreferredConfig = Config.RGB_565;//降低图片从ARGB888到RGB565</span><br><span class="line">       // 重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了</span><br><span class="line">       isBm = new ByteArrayInputStream(baos.toByteArray());</span><br><span class="line">       bitmap = BitmapFactory.decodeStream(isBm, null, newOpts);</span><br><span class="line"></span><br><span class="line">       return compressImage(bitmap);// 压缩好比例大小后再进行质量压缩</span><br><span class="line">       //return bitmap;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="通过uri获取图片并进行压缩"><a href="#通过uri获取图片并进行压缩" class="headerlink" title="通过uri获取图片并进行压缩"></a>通过uri获取图片并进行压缩</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">   * 通过uri获取图片并进行压缩</span><br><span class="line">   *</span><br><span class="line">   * @param uri</span><br><span class="line">   */</span><br><span class="line">  public static Bitmap getBitmapFormUri(Activity ac, Uri uri) throws FileNotFoundException, IOException &#123;</span><br><span class="line">      InputStream input = ac.getContentResolver().openInputStream(uri);</span><br><span class="line">      BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();</span><br><span class="line">      onlyBoundsOptions.inJustDecodeBounds = true;</span><br><span class="line">      onlyBoundsOptions.inDither = true;//optional</span><br><span class="line">      onlyBoundsOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//optional</span><br><span class="line">      BitmapFactory.decodeStream(input, null, onlyBoundsOptions);</span><br><span class="line">      input.close();</span><br><span class="line">      int originalWidth = onlyBoundsOptions.outWidth;</span><br><span class="line">      int originalHeight = onlyBoundsOptions.outHeight;</span><br><span class="line">      if ((originalWidth == -1) || (originalHeight == -1))</span><br><span class="line">          return null;</span><br><span class="line">      //图片分辨率以480x800为标准</span><br><span class="line">      float hh = 100f;</span><br><span class="line">      float ww = 100f;</span><br><span class="line">      //缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可</span><br><span class="line">      int be = 1;//be=1表示不缩放</span><br><span class="line">      if (originalWidth &gt; originalHeight &amp;&amp; originalWidth &gt; ww) &#123;//如果宽度大的话根据宽度固定大小缩放</span><br><span class="line">          be = (int) (originalWidth / ww);</span><br><span class="line">      &#125; else if (originalWidth &lt; originalHeight &amp;&amp; originalHeight &gt; hh) &#123;//如果高度高的话根据宽度固定大小缩放</span><br><span class="line">          be = (int) (originalHeight / hh);</span><br><span class="line">      &#125;</span><br><span class="line">      if (be &lt;= 0)</span><br><span class="line">          be = 1;</span><br><span class="line">      //比例压缩</span><br><span class="line">      BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();</span><br><span class="line">      bitmapOptions.inSampleSize = be;//设置缩放比例</span><br><span class="line">      bitmapOptions.inDither = true;//optional</span><br><span class="line">      bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//optional</span><br><span class="line">      input = ac.getContentResolver().openInputStream(uri);</span><br><span class="line">      Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);</span><br><span class="line">      input.close();</span><br><span class="line"></span><br><span class="line">      return compressImage(bitmap);//再进行质量压缩</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="通过path获取图片并进行压缩"><a href="#通过path获取图片并进行压缩" class="headerlink" title="通过path获取图片并进行压缩"></a>通过path获取图片并进行压缩</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 通过path获取图片并进行压缩</span><br><span class="line">     *</span><br><span class="line">     * @param path</span><br><span class="line">     */</span><br><span class="line">    public static Bitmap getBitmapFormPath( String path) throws  IOException &#123;</span><br><span class="line">//        InputStream input = ac.getContentResolver().openInputStream(uri);</span><br><span class="line">        File imgFile = new File(path);</span><br><span class="line">        InputStream input = new FileInputStream(imgFile);</span><br><span class="line">        BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();</span><br><span class="line">        onlyBoundsOptions.inJustDecodeBounds = true;</span><br><span class="line">        onlyBoundsOptions.inDither = true;//optional</span><br><span class="line">        onlyBoundsOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//optional</span><br><span class="line">        BitmapFactory.decodeStream(input, null, onlyBoundsOptions);</span><br><span class="line">        input.close();</span><br><span class="line">        int originalWidth = onlyBoundsOptions.outWidth;</span><br><span class="line">        int originalHeight = onlyBoundsOptions.outHeight;</span><br><span class="line">        if ((originalWidth == -1) || (originalHeight == -1))</span><br><span class="line">            return null;</span><br><span class="line">        //图片分辨率以480x800为标准</span><br><span class="line">        float hh = 100f;</span><br><span class="line">        float ww = 100f;</span><br><span class="line">        //缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可</span><br><span class="line">        int be = 1;//be=1表示不缩放</span><br><span class="line">        if (originalWidth &gt; originalHeight &amp;&amp; originalWidth &gt; ww) &#123;//如果宽度大的话根据宽度固定大小缩放</span><br><span class="line">            be = (int) (originalWidth / ww);</span><br><span class="line">        &#125; else if (originalWidth &lt; originalHeight &amp;&amp; originalHeight &gt; hh) &#123;//如果高度高的话根据宽度固定大小缩放</span><br><span class="line">            be = (int) (originalHeight / hh);</span><br><span class="line">        &#125;</span><br><span class="line">        if (be &lt;= 0)</span><br><span class="line">            be = 1;</span><br><span class="line">        //比例压缩</span><br><span class="line">        BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();</span><br><span class="line">        bitmapOptions.inSampleSize = be;//设置缩放比例</span><br><span class="line">        bitmapOptions.inDither = true;//optional</span><br><span class="line">        bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//optional</span><br><span class="line">        input = new FileInputStream(imgFile);</span><br><span class="line">        Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);</span><br><span class="line">        input.close();</span><br><span class="line"></span><br><span class="line">        return compressImage(bitmap);//再进行质量压缩</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="图片的缩放"><a href="#图片的缩放" class="headerlink" title="图片的缩放"></a>图片的缩放</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">/***</span><br><span class="line">    * 图片的缩放方法</span><br><span class="line">    *</span><br><span class="line">    * @param bgimage</span><br><span class="line">    *            ：源图片资源</span><br><span class="line">    * @param newWidth</span><br><span class="line">    *            ：缩放后宽度</span><br><span class="line">    * @param newHeight</span><br><span class="line">    *            ：缩放后高度</span><br><span class="line">    * @return</span><br><span class="line">    */</span><br><span class="line">   public static Bitmap zoomImage(Bitmap bgimage, double newWidth,</span><br><span class="line">                                  double newHeight) &#123;</span><br><span class="line">       // 获取这个图片的宽和高</span><br><span class="line">       float width = bgimage.getWidth();</span><br><span class="line">       float height = bgimage.getHeight();</span><br><span class="line">       // 创建操作图片用的matrix对象</span><br><span class="line">       Matrix matrix = new Matrix();</span><br><span class="line">       // 计算宽高缩放率</span><br><span class="line">       float scaleWidth = ((float) newWidth) / width;</span><br><span class="line">       float scaleHeight = ((float) newHeight) / height;</span><br><span class="line">       // 缩放图片动作</span><br><span class="line">       matrix.postScale(scaleWidth, scaleHeight);</span><br><span class="line">       Bitmap bitmap = Bitmap.createBitmap(bgimage, 0, 0, (int) width,</span><br><span class="line">               (int) height, matrix, true);</span><br><span class="line">       return bitmap;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="质量压缩方法"><a href="#质量压缩方法" class="headerlink" title="质量压缩方法"></a>质量压缩方法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * 质量压缩方法</span><br><span class="line">     *</span><br><span class="line">     * @param image</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public static Bitmap compressImage(Bitmap image) &#123;</span><br><span class="line">        ByteArrayOutputStream baos = new ByteArrayOutputStream();</span><br><span class="line">        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);// 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中</span><br><span class="line">        int options = 90;</span><br><span class="line">        while (baos.toByteArray().length / 1024 &gt; 1*3) &#123; // 循环判断如果压缩后图片是否大于100Kb,大于继续压缩</span><br><span class="line">            baos.reset(); // 重置baos即清空baos</span><br><span class="line">            image.compress(Bitmap.CompressFormat.JPEG, options, baos);// 这里压缩options%，把压缩后的数据存放到baos中</span><br><span class="line">            options -= 10;// 每次都减少10</span><br><span class="line">        &#125;</span><br><span class="line">        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());// 把压缩后的数据baos存放到ByteArrayInputStream中</span><br><span class="line">        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);// 把ByteArrayInputStream数据生成图片</span><br><span class="line"></span><br><span class="line">        return zoomImage(bitmap,100,100);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"><i class="fa fa-tag"></i> android</a>
+          
+            <a href="/tags/工具/" rel="tag"><i class="fa fa-tag"></i> 工具</a>
+          
+            <a href="/tags/bitmap/" rel="tag"><i class="fa fa-tag"></i> bitmap</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/wanc/4152288a.html" rel="prev" title="适配Android不同机型，不同屏幕">
+                适配Android不同机型，不同屏幕 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.jpg" alt="Wanc">
+            
+              <p class="site-author-name" itemprop="name">Wanc</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                推荐阅读
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://example.com/" title="自己" target="_blank">自己</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://ife.baidu.com/" title="百度前端技术学院" target="_blank">百度前端技术学院</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://wf.uisdc.com/cn/" title="google前端开发基础" target="_blank">google前端开发基础</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#压缩"><span class="nav-number">1.</span> <span class="nav-text">压缩</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#图片按比例大小压缩方法"><span class="nav-number">1.1.</span> <span class="nav-text">图片按比例大小压缩方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#直接压缩bitmap"><span class="nav-number">1.1.1.</span> <span class="nav-text">直接压缩bitmap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过uri获取图片并进行压缩"><span class="nav-number">1.1.2.</span> <span class="nav-text">通过uri获取图片并进行压缩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过path获取图片并进行压缩"><span class="nav-number">1.1.3.</span> <span class="nav-text">通过path获取图片并进行压缩</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图片的缩放"><span class="nav-number">1.2.</span> <span class="nav-text">图片的缩放</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#质量压缩方法"><span class="nav-number">1.3.</span> <span class="nav-text">质量压缩方法</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wanc</span>
+
+  
+</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共字</span>
+</div>
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
