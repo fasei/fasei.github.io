@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[Ubuntu 下显示windows 文件名乱码]]></title>
+    <url>%2Fwanc%2Fcc2a9d84.html</url>
+    <content type="text"><![CDATA[Ubuntu 下显示windows 文件名乱码 具体操作程序文件是在windows下创建的，或是在windows压缩，然后上传到linux 解压的，或者直接上传的，Windows 的文件名中文编码默认为GBK，压缩或者上传后，文件名还会是GBK编码，虽然在ftp或者其它查看工具显示中 文，但通过http访问，还会是无法找到文件，出现404错误，而Linux中默认文件名编码为UTF8,由于编码不一致所以导致了文件名乱码的问题，解 决这个问题需要对文件名进行转码。 出现这个问题后，我也是各种百度，各种google，也是没有什么好的答案，其中一个说用 unzip -O ….可以解决，但貌似这个参数不可用，还有说用jar解压的，额。。。我没有安装jdk ，太麻烦了，配置也比较费劲，还是去继续找资料吧，最后，使用了convmv，安装速度很快，不需要配置，直接可以使用，下面给大家分享一下这个NB的小 工具： 123456789101112131415161718安装命令：sudo apt-get install convmv常用参数：-r 递归处理子文件夹–notest 真正进行操作，默认情况下是不对文件进行真实操作–list 显示所有支持的编码–unescap 可以做一下转义，比如把 变成空格-i 交互模式（询问每一个转换，防止误操作）convmv 的使用方法：convmv -f 源编码 -t 新编码 [选项] 文件名例：convmv -f GBK -t UTF-8 --notest -r 303i.com/*（303i.com/*为要转编码的文件的当前目录）这样转换以后“GBK编码的文件名”会被转换成UTF-8编码（只是文件名编码的转换，文件内容不会发生变化）。注意：不要在NTFS和FAT文件系统中使用此命令，否则可能产生意外结果，如果要在Linux中正确的显示NTFS和 FAT的中文件名，可以通过mount参数来解决，具体方法查看一下man手册。 至此结束啦~~]]></content>
+      <categories>
+        <category>Ubuntu</category>
+      </categories>
+      <tags>
+        <tag>Ubuntu</tag>
+        <tag>基本操作</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[完美解决hexo下分类和标签无法显示的问题]]></title>
+    <url>%2Fwanc%2Fc38920ba.html</url>
+    <content type="text"><![CDATA[今天更换了一个新的主题，之后发现无法正常添加 分类页 和 标签页，经过一下午的研究，终于找到了最完美的解决方案。 步骤一你需要在 hexo 根目录的 source 文件夹下新建一个 tags 文件夹，然后在 tags 文件夹里面新建一个 index.md 文件。快捷命令为： 1hexo new page &quot;tags&quot; 步骤二编辑 index.md 文件，内容如下： 12345---title: &quot;tags&quot;type: tagslayout: &quot;tags&quot;--- 重点来了: 注意！这里面最重要的就是 layout 选项，后面的参数对应的是你 主题文件夹下 layout 文件夹下第一级的布局文件。比如，我的主题是用 ejs 写的，那么对应的就是 layout/tags.ejs，如果没有，那么就会出现空白的现象！如果你的 tags 文件的命名时 a.ejs，那么你就应该写成 layout: “a”。 步骤三编辑主题配置文件:1234nav: home: / about: /about tags: /tags 步骤四编辑 hexo 配置文件 Directory 选项。 检查一下名称是否对应 12# Directorytag_dir: tags 至此，完美解决。 最重要的就是看一下你的主题文件里有没有标签页或者分类页的布局文件，一般来说都是有的，只是命名和存放的位置可能不同，所以大家要根据实际情况来修改。]]></content>
+      <categories>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>tools</tag>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Android 应用全局字体调节或禁止随系统字体大小更改]]></title>
+    <url>%2Fwanc%2F777c95c.html</url>
+    <content type="text"><![CDATA[应用全局字体调节或禁止随系统字体大小更改 1.禁止跟随系统字体大小调节在Application中复写getResources()方法 12345678910@Overridepublic Resources getResources() &#123;//还原字体大小 Resources res = super.getResources(); Configuration configuration = res.getConfiguration(); if (configuration.fontScale != 1.0f) &#123; configuration.fontScale = 1.0f; res.updateConfiguration(configuration, res.getDisplayMetrics()); &#125; return res;&#125; 2.应用全局字体大小调节在Application中复写getResources()方法12345678910@Overridepublic Resources getResources() &#123;//还原字体大小 Resources res = super.getResources(); Configuration configuration = res.getConfiguration(); if (configuration.fontScale != fontScale) &#123;//fontScale要缩放的比例 configuration.fontScale = fontScale; res.updateConfiguration(configuration, res.getDisplayMetrics()); &#125; return res;&#125; 3.Android 8.0适配Android 8.0上会发现这样修改字体的缩放比例是不起作用的，需要在Activity中同样进行复写getResources()方法。 4.整个应用字体大小调节方案在设置界面进行字体缩放比例调节，退出时关闭所有已打开的Activity，并重启主界面。 12345678910111213141516@Override public void onBackPressed() &#123; saveFontScaleRate(); &#125; private void saveFontScaleRate() &#123; if (defaultFontScaleRate != fontScaleRate) &#123; new SpUtils(FontScaleActivity.this).putData(ICourtApplication.FONT_SCALE_RATE, fontScaleRate); BaseApplication.setFontScale(fontScaleRate); AppManager appManager = AppManager.getAppManager(); MainActivity activity = appManager.getActivity(MainActivity.class); appManager.finishAllActivity(activity); activity.recreate(); &#125; else &#123; finish(); &#125; &#125; 5.注意所有想要缩放的控件，不只是TextView，任何控件，只需要将尺寸单位换成SP，自然，不想要随字体调节改变的也只需将SP换成其他单位]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+        <tag>字体</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[docker中wanc镜像版本说明]]></title>
+    <url>%2Fwanc%2F8585f8b8.html</url>
+    <content type="text"><![CDATA[docker中wanc镜像版本说明 wanc:1.1 安装了openssh 安装了hexo 启动需要端口映射 映射端口4000到400，便于外面访问hexo 1docker run -ti -p 4000:400 -p 222:222 wanc:1.0 /bin/bash hexo 和openssh 端口映射 1docker run -ti -p 4000:4000 -p 222:222 -p 21:21 wanc:1.0 /bin/bash 启动openssh远程服务 1service ssh start 远程密码 xiaoyuaynuan1314 wanc:1.1 ubuntu系统至此结束啦~~]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+        <tag>wanc镜像版本</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[docker中wanc镜像版本说明]]></title>
+    <url>%2Fwanc%2F8585f8b8.html</url>
+    <content type="text"><![CDATA[docker中wanc镜像版本说明 wanc hexo镜像wanc:1.1 安装了openssh 安装了hexo 启动需要端口映射 映射端口4000到400，便于外面访问hexo 1docker run -ti -p 4000:400 -p 222:222 wanc:1.0 /bin/bash hexo 和openssh 端口映射 1docker run -ti -p 4000:4000 -p 222:222 -p 21:21 wanc:1.0 /bin/bash 启动openssh远程服务 1service ssh start 远程密码 xiaoyuaynuan1314 wanc:1.1 ubuntu系统 可以远程：xiaoyuanyuan1314至此结束啦~~ base 基础镜像base：1.0 wanc：1.1 cms lamp镜像cms:1.0 增加了php的安装，完成了lamp 手动启动apache2服务： service apache2 startcms:1.0 安装了apache2 安装了mysql可以远程密码：xiaoyuaynuan1314 base：1.0]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+        <tag>wanc镜像版本</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[ubuntu安装php5.6]]></title>
+    <url>%2Fwanc%2F8a57d6d0.html</url>
+    <content type="text"><![CDATA[ubuntu中不能直接安装php5.6 卸载php7.01sudo apt-get autoremove php7* 安装相关软件使用ppa增加源:123456sudo apt-get install software-properties-commonapt-get update//如果下面的命令有问题，重复执行上2条命令sudo add-apt-repository ppa:ondrej/php sudo apt-get update sudo apt-get -y install php5.6 php5.6-mcrypt php5.6-mbstring php5.6-curl php5.6-cli php5.6-mysql php5.6-gd php5.6-intl php5.6-xsl php5.6-zip sudo apt-get -y install php5.2 php5.2-mcrypt php5.2-mbstring php5.2-curl php5.2-cli php5.2-mysql php5.2-gd php5.2-intl php5.2-xsl php5.2-zip再用php -v查看当前版本]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+        <tag>wanc镜像版本</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[docker端口映射]]></title>
+    <url>%2Fwanc%2F97482cb4.html</url>
+    <content type="text"><![CDATA[docker端口映射 docker端口映射 我在容器中运行hexo，需要访问4000端口，可以将4000端口映射出来 1docker run -ti -p 4000:400 wanc:1.0 /bin/bash 将4000端口映射到400 端口，然后在宿主电脑访问400端口即可 至此结束啦~~]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>基本操作</tag>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[docker常用命令]]></title>
+    <url>%2Fwanc%2F749ad7d8.html</url>
+    <content type="text"><![CDATA[docker常用命令 端口说明hexo 使用的4000 映射为4000openssh使用的端口为222 映射为222可以使用IP:HostPort:ContainerPort格式指定映射使用一个特定地址： 常用命令 映射端口4000到400，便于外面访问hexo 1docker run -ti -p 4000:4000 -p 21:21 wanc:1.0 /bin/bash hexo 和openssh 端口映射 123docker run -ti -p 4000:4000 -p 222:222 -p 21:21 wanc:1.0 /bin/bash docker run -ti -p 4000:4000 -p 222:222 -p 21:21 -p 3306:3306 -p 80:80 base:1.0 /bin/bash 启动openssh远程服务 1service ssh start 至此结束啦~~ docker images说明：1、base 基础库，包含远程的软件和hexo2、wanc 同base未做修改]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>基本操作</tag>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Ubuntu中npm镜像加速]]></title>
+    <url>%2Fwanc%2F3ec9c65d.html</url>
+    <content type="text"><![CDATA[Ubuntu中npm镜像加速 Ubuntu中npm镜像加速更换成淘宝的镜像，否则非常慢 1npm config set registry https://registry.npm.taobao.org 至此结束啦~~]]></content>
+      <categories>
+        <category>Ubuntu</category>
+      </categories>
+      <tags>
+        <tag>Ubuntu</tag>
+        <tag>基本操作</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[activity类型singleTask启动的问题]]></title>
+    <url>%2Fwanc%2F84627972.html</url>
+    <content type="text"><![CDATA[假设在任务栈中存在该Activity的实例，再次启动的时候，也就不会重新去创建它的实例，onCreate方法并没有执行，也就获取不到Bundle传递过来的值。 此时，我们需要重写 onNewIntent()方法， 系统会回调其onNewIntent方法，并将 onNewIntent 接收的 intent设置给 Activity。 之后，我们可以在 onStart()方法中接收Bundle传递过来的值。]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+        <tag>基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[docker镜像保存]]></title>
+    <url>%2Fwanc%2Ff16a21c.html</url>
+    <content type="text"><![CDATA[docker镜像保存 docker镜像保存-a :提交的镜像作者；-c :使用Dockerfile指令来创建镜像；-m :提交时的说明文字；-p :在commit时，将容器暂停。将容器a402222174a2 保存为新的镜像,并添加提交人信息和说明信息。 1docker commit -a &quot;runoob.com&quot; -m &quot;my apache&quot; a404222274a2 my:v1 至此结束啦~~]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>基本操作</tag>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[android.view.WindowLeaked]]></title>
+    <url>%2Fwanc%2Fa09020b1.html</url>
+    <content type="text"><![CDATA[android.view.WindowLeaked android.view.WindowLeakedleak 是泄露的意思，WindowLeaked 应该是窗体泄露， 碰到这种异常的原因我觉得是：在某个Dialog或者某个PopupWindow正在显示的时候我们去finish()了承载该Dialog(或PopupWindow)的Activity，所以抛出这种异常，因为这个Dialog(或PopupWindow)的WindowManager已经没有谁可以附属了，所以它的窗体管理器已经泄漏了。 android.view.WindowLeaked一般会发生在Activity 与Dialog的显示。 Activity 中create 一个Dialog，若你先关闭Dialog再关闭Activity就是正常的，若你先关闭Activity再关闭Dialog就会报错这个android.view.WindowLeaked错误了。 分析这个原因是：Dialog是基于Activity而创建的：new ProgressDialog(this)；this 就是Activity。 Activtity先finish,那Dialog就没得依附了，所以就会报android.view.WindowLeaked。 1android.view.WindowLeaked: Activity com.zonggou.recharge.OtpMainActivity has leaked window com.android.internal.policy.impl.PhoneWindow$DecorView&#123;41713c40 V.E..... R.....ID 0,0-300,168&#125; that was originally added here 解决：好多人都说这个是内存泄漏 我自己也弄了好久 终于找到了原因 哈哈 其实不是什么内存泄漏原因是 activity 和dialog同时显示 要先dialog.dismiss() 后activity.finish() 如果直接finish() 会出错 但不影响功能。]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+        <tag>view</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[docker删除镜像]]></title>
+    <url>%2Fwanc%2Fdcc37883.html</url>
+    <content type="text"><![CDATA[docker删除镜像的基本操作 查看镜像 docker images12345rt@123:~# docker imagesREPOSITORY TAG IMAGE ID CREATED SIZE192.168.0.1/jii/jenkins 1.0.1 3391ef1391f6 18 hours ago 206 MB192.168.0.1/you/tom 1.0.8 f8ab12e03d53 22 hours ago 276 MB192.168.0.1/you/tom 1.0.9 f8ab12e03d53 22 hours ago 276 MB 删除镜像，会报错12rt@123:~# docker rmi f8ab12e03d53Error response from daemon: conflict: unable to delete f8ab12e03d53 (must be forced) - image is referenced in multiple repositories 仔细观察，发现f8ab12e03d53这个镜像id指向了两个repository，因此无法删除 删除时可以用repository和tag的方式来删除12rt@123:~# docker rmi 192.168.0.1/you/tom:1.0.8Untagged:192.168.0.1/you/tom:1.0.8 再次查看镜像，1.0.8的就被删除了。1234rt@123:~# docker imagesREPOSITORY TAG IMAGE ID CREATED SIZE192.168.0.1/jii/jenkins 1.0.1 3391ef1391f6 18 hours ago 206 MB192.168.0.1/you/tom 1.0.9 f8ab12e03d53 22 hours ago 276 MB 至此结束啦~~]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>基本操作</tag>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[docker镜像加速]]></title>
+    <url>%2Fwanc%2F189e501b.html</url>
+    <content type="text"><![CDATA[docker镜像加速 docker镜像加速 我这里用的是阿里云的-&gt;容器镜像服务-&gt;镜像加速器 首先登陆阿里云获取加速地址：我的加速地址:https://wyv0qi1c.mirror.aliyuncs.com 然后在powershell 输入如下命令 1234docker-machine ssh default sudo sed -i &quot;s|EXTRA_ARGS=&apos;|EXTRA_ARGS=&apos;--registry-mirror=https://wyv0qi1c.mirror.aliyuncs.com |g&quot; /var/lib/boot2docker/profile exit docker-machine restart default 至此结束啦~~]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>基本操作</tag>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[自动记录上班时间]]></title>
+    <url>%2Fwanc%2F71b71c96.html</url>
+    <content type="text"><![CDATA[每天上班打卡，弹性工作时间，可是下班时间就是记不住，哎，如果有什么办法，能记录我们上班时间，自动记录下班时间就好了。 介绍今天介绍的主角批处理就能完成上面的事情,引用百度百科一段话： 批处理是一种简化的脚本语言，也称作宏。它应用于DOS和Windows系统中，它是由DOS或者Windows系统内嵌的命令解释&gt; 器（通常是COMMAND. COM或者CMD.EXE）解批处理文件图标释运行。类似于Unix中的Shell脚本。批处理文件具有.bat或者.cmd的扩展命令行窗口名，其最简单的例子，是逐行书写在命令行中会用到的各种命令。更复杂的情况，需要使用if，for，goto等命令控制程&gt; &gt; 序的运行过程，如同C，Basic等中高级语言一样。 主要思路 开机后，电脑自动执行批处理文件，记录上班时间，同时计算出下班时间，写入指定A文件 桌面创建快捷方式，随时查看A文件 创建批处理文件找一个目录创建文件act.bat,并将如下代码复制到文件中，保存退出。1234567891011121314151617181920212223242526272829303132333435363738394041424344454647@echo offcopy time.txt temp.txtdel time.txt::我的工作时间为9小时30分钟set workHour=9set workMinute=30set year=%date:~0,4%set month=%date:~5,2%set day=%date:~8,2%set /a hour=%time:~0,2%+%workHour%set /a minute=%time:~3,2%+%workMinute%set second=%time:~6,2%::计算下班时间if %minute% geq 60 (set /a hour=%hour%+1set /a minute=%minute%-60)else (set /a hour=%hour%+0set /a minute=%minute%-0)::小时格式化set hourStr=if %hour% geq 10 (set hourStr=%hour%)else (set hourStr=0%hour%)::分钟格式化set minuteStr=if %minute% geq 10 (set minuteStr=%minute%)else (set minuteStr=0%minute%)echo 开机时间是 %date% %time% 我走的时间是 %date% %hourStr%:%minuteStr%:%second% &gt;&gt;time.txttype temp.txt&gt;&gt;time.txtdel temp.txt 创建开机自启动任务打开自启动目录，创建act.bat的快捷方式，将快捷方式复制到自启动目录即可，具体操作如下： 打开运行窗口 在打开的运行窗口中输入命令shell:startup，然后点击确定按钮。 这样就可以打开当前用户的启动文件夹，同样把需要启动的应用快捷方式复制到此文件夹中，也可以实现该文件随系统自动启动。 详细过程参考：设置自启动任务 查看下班时间双击act.bat文件，即可模拟开机过程，在act.bat目录中会创建time.txt文件，即可查看下班时间啦 之后每天开机电脑都会自动工作了，完美！！！ 至此大功告成啦~~]]></content>
+      <categories>
+        <category>批处理</category>
+      </categories>
+      <tags>
+        <tag>bat</tag>
+        <tag>批处理</tag>
+        <tag>原创</tag>
+        <tag>windows</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Android MarginLeft与MarginStart的区别]]></title>
+    <url>%2Fwanc%2Fe5d95f87.html</url>
+    <content type="text"><![CDATA[在写layout布局的时候，我们会发现有这样几个比较相似的属性： MarginStart VS MarginLeft MarginEnd VS MarginRight 这些属性的区别是什么? 根据api注释，我们得知MarginStart指的是控件距离开头View部分的间距大小，MarginLeft则指的是控件距离左边View部分的间距大小，MarginEnd和MarginRight同理。 一般情况下，View开始部分就是左边，但是有的语言目前为止还是按照从右往左的顺序来书写的，例如阿拉伯语，在Android 4.2系统之后，Google在Android中引入了RTL布局，更好了支持了由右到左文字布局的显示，为了更好的兼容RTL布局，google推荐使用MarginStart和MarginEnd来替代MarginLeft和MarginRight，这样应用可以在正常的屏幕和由右到左显示文字的屏幕上都保持一致的用户体验。 以下内容摘自他人翻译的中文Android 4.2API: Android 4.2引入了由右到左文字的全面本地支持布局。在本地RTL支持下，您可以为所有用户带来完美的应用体验，不论他们的文字书写方向是由左至右还是由右至左。 当用户切换系统语言到由右至左书写方式时，系统提供自动的应用UI布局和所有可视组件的镜像，包括文字元素的显示和输入。 您的应用仅需极少改变即可支持RTL布局镜像。如果您的应用支持这一特性，只要在您应用的manifest文件中将所有的”left/right”布局属性改变为对应的”start/end”即可。系统就会根据需要处理您UI了。]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Android Studio解决Java程序输出中文乱码]]></title>
+    <url>%2Fwanc%2Fc430cffa.html</url>
+    <content type="text"><![CDATA[经查阅资料，发现需要手动在build.gradle中添加代码 新版 1tasks.withType(JavaCompile) &#123; options.encoding = UTF-8 &#125; 旧版，以gradle-1.12为例 1tasks.withType(Compile) &#123; options.encoding = UTF-8 &#125;]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[textview常用功能]]></title>
+    <url>%2Fwanc%2F16ce41f9.html</url>
+    <content type="text"><![CDATA[这个功能实现起来很简单，只需要两步就可以完成。 textview文字滑动具体如下： 在xml布局声明textView的时候，我们设置它的scrollbars属性为vertical； 12345678&lt;TextView android:id=&quot;@+id/textView1&quot; android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;200dp&quot; android:layout_weight=&quot;2.89&quot; android:scrollbars=&quot;vertical&quot; android:textColor=&quot;#ffffffff&quot; android:text=&quot; &quot;/&gt; 在java代码中使用textView时，调用textView的setMovementMethod方法即可。 1234567@Overrideprotected void onCreate(Bundle savedInstanceState) &#123; super.onCreate(savedInstanceState); setContentView(R.layout.location); tv = (TextView) findViewById(R.id.textView1); tv.setMovementMethod(ScrollingMovementMethod.getInstance());&#125; textview滑动到底部123456789101112131415161718192021String text = &quot;showText:\r\n&quot;; for (Student stu : sss) &#123; text += stu.toString() + &quot;\r\n&quot;; &#125; text += &quot;end.&quot;; showText.setText(text); int offset = (showText.getLineCount()) * showText.getLineHeight() + showText.getPaddingTop() + showText.getPaddingBottom(); Log.d(&quot;ObjectBoxActivity&quot;, &quot;offset:&quot; + offset + &quot;,getHeight&quot; + showText.getHeight()); if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.JELLY_BEAN) &#123; Log.d(&quot;ObjectBoxActivity&quot;, &quot;showText.getLineCount():&quot; + showText.getLineCount() + &quot;,showText.getMaxLines()&quot; + showText.getMaxLines()); if (showText.getLineCount() &gt; showText.getMaxLines()) &#123; Log.d(&quot;ObjectBoxActivity&quot;, &quot; showText.scrollTo&quot;); showText.scrollTo(0, offset - showText.getHeight()); &#125; else &#123; showText.scrollTo(0, 0); &#125; &#125;]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+        <tag>textview</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[小米横竖屏切换]]></title>
+    <url>%2Fwanc%2F1d89e1d5.html</url>
+    <content type="text"><![CDATA[测试场景：测试手机红米Note5，页面A为股票详情界面，其屏幕方向根据屏幕旋转，然后锁住屏幕竖屏方向，跳转到页面B（横屏页面），然后关闭页面B，回到页面A，此时页面A会自动旋转到横屏然后再转到竖屏。 其在AndroidManifest.xml中声明如下： 12345678&lt;activity android:name=&quot;.activity.StockEditActivity&quot; android:configChanges=&quot;keyboardHidden|orientation|screenSize&quot;&gt; &lt;intent-filter&gt; &lt;action android:name=&quot;com.hibor.stockAndArticle&quot; /&gt; &lt;category android:name=&quot;android.intent.category.DEFAULT&quot; /&gt; &lt;/intent-filter&gt;&lt;/activity&gt; 有现象了，就先从logcat去入手，首先在页面A加入如下代码：123456@Override public void onConfigurationChanged(Configuration newConfig) &#123; //0--undefined,1--portrait,2--landscape super.onConfigurationChanged(newConfig); Log.e(TAG, &quot;onConfigurationChanged: &quot; + newConfig.getLayoutDirection()); &#125; 发现界面B调用onDestroy后，界面A回调了两次onConfigurationChanged，而且打出的getLayoutDirection居然都是未定义0。结合查看pdf研报页面，出现同样的问题，但是如果页面B为竖屏方向，回到页面A就不会出现问题。接着尝试：在页面B的onDestroy中添加如下代码123456@Override protected void onDestroy() &#123; //@modify 针对一些手机切换到上个界面后，横竖屏多次切换的问题 this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); ... ...&#125; 然后重新运行，问题解决了 ^_^ 总结一下：主要是一些手机系统定制比较特殊，如果你也遇到了类似的问题，有不同的解决方法，欢迎共同交流 ^_^]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+        <tag>小米</tag>
+        <tag>横竖屏</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[ErrorThe SDK Build Tools revision (24.0.3) is too low for project 'app']]></title>
+    <url>%2Fwanc%2Fc030aeae.html</url>
+    <content type="text"><![CDATA[ErrorThe SDK Build Tools revision (24.0.3) is too low for project ‘app’ 问题原因造成这个问题的原因可能是升级了Gradle插件的版本，也就是顶级build.gradle文件中声明的版本较高 解决办法123456buildscript &#123; ... dependencies &#123; classpath &apos;com.android.tools.build:gradle:2.3.3&apos; &#125;&#125; 如上面的代码所示，在顶级build.gradle文件中声明gradle插件版本为2.3.3，那么就要求Gradle版本最低3.3，Build Tools版本最低25.0.0。 至此结束啦~~]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[单例toast]]></title>
+    <url>%2Fwanc%2Fd8c35fe9.html</url>
+    <content type="text"><![CDATA[当我们处于某个场景，例如一个按钮可以触发toast的显示，当你在多次点击按钮时，会多次触发toast的显示。而调用android原生的toast的makeText的方式所生产的toast是被加到一个队列里面，然后依次执行。这样就会出现多次点击按钮触发的toast一直会按队列出现在界面上，而且即使退出了当前界面也会一直出现在手机上,而且无法手动取消，这时的用户体验变得非常的差。这时就可以使用自定义样式的toast。 12345678910111213141516171819202122public class ToastUtils &#123; private static Toast toast = null; //Application初始化，避免内存泄漏 public static void init(Application mContext) &#123; if (toast != null) &#123; return; &#125; //不使用new Toast(mContext)，会出异常 toast = Toast.makeText(mContext, &quot;&quot;, Toast.LENGTH_SHORT); &#125; public static void showToast(String msg) &#123; if (toast == null) &#123; return; &#125; else &#123; toast.setDuration(Toast.LENGTH_LONG); toast.setText(msg); toast.show(); &#125; &#125;&#125; 然后哪用就哪调用方法就可以，很简单吧！]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android studio</tag>
+        <tag>toast</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[APP启动白屏问题解决办法]]></title>
+    <url>%2Fwanc%2F856f9e78.html</url>
+    <content type="text"><![CDATA[android app在启动的时候会有一个白屏或者黑屏的效果，非常恶心，现就此问题分析解决。 问题原因Activity只能到onResume时，才能展示到前台。onCreate中的setContentView();方法有耗时操作，所以，如果为MainActivity设置背景的话，无论onCreate-onResume速度多快，都会出现短暂的白屏或者黑屏（视application的background属性而定）。 解决办法找到清单文件中设置主题这句话，新增主题或者修改默认主题即可，修改时一般有以下几种方式。 1、背景修改为透明(推荐) 1&lt;item name=&quot;android:windowIsTranslucent&quot;&gt;true&lt;/item&gt; 2、设置一张背景图(一闪而过，一般选择和启动页颜色相近的图片) 1&lt;item name=&quot;android:windowBackground&quot;&gt;@drawable/bg&lt;/item&gt; 3、设置与启动页相近的背景颜色 1&lt;item name=&quot;android:windowBackground&quot;&gt;@android:color/black&lt;/item&gt; 至此结束啦~~]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+        <tag>白屏</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[NoSuchMethodError处理方式]]></title>
+    <url>%2Fwanc%2F43d8945a.html</url>
+    <content type="text"><![CDATA[Bug:java.lang.NoSuchMethodError: No static method setLayoutDirection(Landroid/graphics/drawable/Drawable;I)V in class Landroid/support/v4/graphics/drawable/DrawableCompat;然后出现了这个：java.lang.NoClassDefFoundError: android.support.v7.widget.RecyclerView$SavedState 解决方法修改gradle中内容： 123456compile (&apos;com.android.support:support-v4:23.4.0&apos;)&#123; force = true;&#125;compile(&apos;com.android.support:recyclerview-v7:23.4.0&apos;) &#123; exclude module: &apos;support-v4&apos;&#125; 至此结束啦~~]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+        <tag>NoSuchMethodError</tag>
+        <tag>冲突</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[HorizontalScrollView嵌套RecyclerView展示不完全问题]]></title>
+    <url>%2Fwanc%2F5557af61.html</url>
+    <content type="text"><![CDATA[项目中有个HorizontalScrollView嵌套RecycleView的列表在华为荣耀8（android7.0系统）上展示不完全（横向滑动展示不完全） 解决方法在RecycleView外层嵌套一个RelativeLayout里面添加: 1android:descendantFocusability=”blocksDescendants” 这个属性即可 这个属性含有三个值如下beforeDescendants：viewgroup会优先其子类控件而获取到焦点afterDescendants：viewgroup只有当其子类控件不需要获取焦点时才获取焦点blocksDescendants：viewgroup会覆盖子类控件而直接获得焦点 至此结束啦~~]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+        <tag>horizontalScrollView</tag>
+        <tag>recyclerView</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[WebView加载异常处理]]></title>
+    <url>%2Fwanc%2F4b37dab4.html</url>
+    <content type="text"><![CDATA[对于移动端的混合模式开发，一般都会涉及到WebView这一控件，在该控件加载网页的过程中，多多少少都会遇到加载网页失败等情况，那么也该做个记录，记录下这些坑。 404错误12345678910111213141516webView.setWebViewClient(new WebViewClient() &#123; @SuppressWarnings(&quot;deprecation&quot;) @Override public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) &#123; super.onReceivedError(view, errorCode, description, failingUrl); //TODO &#125; @TargetApi(android.os.Build.VERSION_CODES.M) @Override public void onReceivedError(WebView view, WebResourceRequest req, WebResourceError rerr) &#123; //TODO &#125; 这种错误是挺奇怪的，上述onReceiveError根本不会调用！搜索了好久，见网上有人这么解决： 1234567891011webView.setWebChromeClient(new WebChromeClient() &#123; @Override public void onReceivedTitle(WebView view, String title) &#123; super.onReceivedTitle(view, title); CharSequence pnotfound = &quot;404&quot;;//或者找不到页面 if (title.contains(pnotfound)) &#123; view.setVisibility(View.INVISIBLE); &#125; &#125; &#125;); 本地网页写法：在asset中放网页1234567891011121314&lt;html&gt;&lt;body&gt;&lt;div&gt; &lt;table width=&quot;50%&quot; height=&quot;50%&quot; &gt; &lt;tr&gt; &lt;td&gt; &lt;p style=&quot;text-align:center;&quot;&gt;&lt;img src=&quot;time_out.png&quot;&gt;&lt;/p&gt; &lt;/td&gt; &lt;/tr&gt; &lt;/table&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt; 然后异常捕获处理 1234567891011121314public static final String NOT_FOUND_PAGE = &quot;file:///android_asset/not_found.html&quot;; webView.setWebChromeClient(new WebChromeClient() &#123; @Override public void onReceivedTitle(WebView view, String title) &#123; super.onReceivedTitle(view, title); CharSequence pnotfound = &quot;404&quot;;//或者找不到页面 if (title.contains(pnotfound)) &#123; view.stopLoading(); view.loadUrl(NOT_FOUND_PAGE); &#125; &#125; &#125;); 至此结束啦~~]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+        <tag>webView</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[docker删除镜像]]></title>
+    <url>%2Fwanc%2Fdcc37883.html</url>
+    <content type="text"><![CDATA[对于移动端的混合模式开发，一般都会涉及到WebView这一控件，在该控件加载网页的过程中，多多少少都会遇到加载网页失败等情况，那么也该做个记录，记录下这些坑。 404错误12345678910111213141516webView.setWebViewClient(new WebViewClient() &#123; @SuppressWarnings(&quot;deprecation&quot;) @Override public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) &#123; super.onReceivedError(view, errorCode, description, failingUrl); //TODO &#125; @TargetApi(android.os.Build.VERSION_CODES.M) @Override public void onReceivedError(WebView view, WebResourceRequest req, WebResourceError rerr) &#123; //TODO &#125; 这种错误是挺奇怪的，上述onReceiveError根本不会调用！搜索了好久，见网上有人这么解决： 1234567891011webView.setWebChromeClient(new WebChromeClient() &#123; @Override public void onReceivedTitle(WebView view, String title) &#123; super.onReceivedTitle(view, title); CharSequence pnotfound = &quot;404&quot;;//或者找不到页面 if (title.contains(pnotfound)) &#123; view.setVisibility(View.INVISIBLE); &#125; &#125; &#125;); 本地网页写法：在asset中放网页1234567891011121314&lt;html&gt;&lt;body&gt;&lt;div&gt; &lt;table width=&quot;50%&quot; height=&quot;50%&quot; &gt; &lt;tr&gt; &lt;td&gt; &lt;p style=&quot;text-align:center;&quot;&gt;&lt;img src=&quot;time_out.png&quot;&gt;&lt;/p&gt; &lt;/td&gt; &lt;/tr&gt; &lt;/table&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt; 然后异常捕获处理 1234567891011121314public static final String NOT_FOUND_PAGE = &quot;file:///android_asset/not_found.html&quot;; webView.setWebChromeClient(new WebChromeClient() &#123; @Override public void onReceivedTitle(WebView view, String title) &#123; super.onReceivedTitle(view, title); CharSequence pnotfound = &quot;404&quot;;//或者找不到页面 if (title.contains(pnotfound)) &#123; view.stopLoading(); view.loadUrl(NOT_FOUND_PAGE); &#125; &#125; &#125;); 至此结束啦~~]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+        <tag>webView</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[NestedScrollView+RecyclerView优雅的解决滑动冲突问题]]></title>
+    <url>%2Fwanc%2Fb39e403b.html</url>
+    <content type="text"><![CDATA[在此之前，经历过ScrollView嵌套ScrollView滑动冲突，ScrollView与ListView嵌套滑动冲突等等，网上解决方法比较多暂不赘述了，RecyclerView出来已经差不多2年了，ListView可以说已经成为了过去式了，现在开发完全使用RecyclerView就行了。 我亲自试验过，RecyclerView嵌套RecyclerView是不存在滑动冲突的，ScrollView嵌套RecyclerView也会存在显示不全的问题，滑动也有一点点粘连的感觉不是太流畅，NestedScrollView嵌套RecyclerView不会存在显示不全的问题，代码如下： 123456789101112131415161718192021222324252627&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&lt;android.support.v4.widget.NestedScrollView xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;match_parent&quot;&gt; &lt;LinearLayout android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;wrap_content&quot; android:orientation=&quot;vertical&quot;&gt; &lt;TextView android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;wrap_content&quot; android:text=&quot;@string/app_name&quot;/&gt; &lt;android.support.v7.widget.RecyclerView android:id=&quot;@+id/recyclerView&quot; android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;wrap_content&quot;/&gt; &lt;TextView android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;wrap_content&quot; android:text=&quot;@string/app_name&quot;/&gt; &lt;/LinearLayout&gt;&lt;/android.support.v4.widget.NestedScrollView&gt; 上面的代码只是简单的嵌套而已，但是还有一个小问题，触摸到RecyclerView的时候滑动还有些粘连的感觉，只需要在代码中设置 12mRecyclerView.setHasFixedSize(true);mRecyclerView.setNestedScrollingEnabled(false); 就可以完美的解决这个问题。 至此结束啦~~]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+        <tag>recyclerView</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[获取当前应用的签名]]></title>
+    <url>%2Fwanc%2Fdcab177b.html</url>
+    <content type="text"><![CDATA[微信开放平台中申请创建应用需要使用应用的签名，下面说下获取应用签名的方法 方式一：查询keystore的MD5如果还不想设置任何背景也不想出现按压效果的话，可以把背景设置为透明 可以在运行窗口，定位到keystore所在的路径，(以android默认keystore为例)执行cd C:\Users\ssc.android定位到.android下 执行下面这条语句后就能显示Key的所有信息 keytool -list -v -keystore xxx.jks 1keytool -list -v -keystore C:\Users\JzJ\Desktop\hibor\keystone MD5值就是所要的应用签名，只是比下面提到的签名生成工具生成的多出了中间的冒号 方式二：微信开发平台提供的签名生成工具使用如下工具，可以获取当前手机安装应用的包名和签名： 签名工具 这样就可以了。]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+        <tag>tools</tag>
+        <tag>签名</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[取消RadioButton点击效果]]></title>
+    <url>%2Fwanc%2Fdeadd2e5.html</url>
+    <content type="text"><![CDATA[在最近更新的几个版本中，如果在不设置RadioButton background属性的情况下， 在点击时会显示一个淡淡的按压效果。 如果还不想设置任何背景也不想出现按压效果的话，可以把背景设置为透明 1android:background=&quot;@color/transparent&quot; 这样就可以取消按压效果了。]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+        <tag>view</tag>
+        <tag>radioButton</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[带阻尼效果的HorizontalScrollView]]></title>
+    <url>%2Fwanc%2Fb8bd18cc.html</url>
+    <content type="text"><![CDATA[要实现的效果就是HorizontalScrollView中最上方有一个阻尼效果，当下拉的时候，产生一种被拉伸的效果，松手后恢复原样，就像弹簧一样。 如果实现这种效果，需要重写HorizontalScrollView： 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102103104105106107108109110111112113114115116117118119120121122123124125126127128129130131132133134135136137138139140141142143144145146147148149150151152153154155156157158159160161162163164165166167168169/** * Author: wangchao * Time: 2018/4/7 * Description: This is 带阻尼效果的水平滑动控件 */public class HorizontalFeatureScrollView extends HorizontalScrollView &#123; private View inner; private float x; private Rect normal = new Rect(); private boolean isCount = false; private boolean isMoveing = false; private int initLeft; private int left; private View views; public HorizontalFeatureScrollView(Context context, AttributeSet attrs) &#123; super(context, attrs); &#125; /** * Based on the XML generated view work done. * The function in the creation of the view of the last call. * after all sub-view has been added. * Even if the sub-class covered the onFinishInflate method. * it should also call the parent class method to make the method to be implemented. */ @Override protected void onFinishInflate() &#123; if (getChildCount() &gt; 0) &#123; inner = getChildAt(0); &#125; &#125; /** * Touch event handling **/ @Override public boolean onTouchEvent(MotionEvent ev) &#123; if (inner != null) &#123; commOnTouchEvent(ev); &#125; return super.onTouchEvent(ev); &#125; @Override public boolean onInterceptTouchEvent(MotionEvent ev) &#123; if (ev.getAction() == MotionEvent.ACTION_UP) &#123; if (views != null) &#123; //Views.getDrawer().closeDrawers(); &#125; &#125; return super.onInterceptTouchEvent(ev); &#125; /** * Slide event (let the speed of sliding into the original 1/2) */ @Override public void fling(int velocityY) &#123; super.fling(velocityY / 2); &#125; /*** * Touch the event * * @param ev */ public void commOnTouchEvent(MotionEvent ev) &#123; int action = ev.getAction(); switch (action) &#123; case MotionEvent.ACTION_DOWN: break; case MotionEvent.ACTION_UP: isMoveing = false; // Fingers loose if (isNeedAnimation()) &#123; animation(); &#125; break; /**Excluding the first mobile calculation. * because the first time can not know the y coordinates. * in MotionEvent.ACTION_DOWN not get. * because this time is MyScrollView touch event passed to the LIstView child item above. * So from the second calculation But we also have to initialize. * that is. the first time to move the sliding distance to 0. * After the record is accurate on the normal implementation. */ case MotionEvent.ACTION_MOVE: final float preX = x;// When the y coordinate is pressed float nowX = ev.getX();// Always y-coordinate int deltaX = (int) (nowX - preX);// Slide distance if (!isCount) &#123; deltaX = 0; // Here to 0. &#125; // When the scroll to the top or the most when it will not scroll, then move the layout. isNeedMove(); if (isMoveing) &#123; // Initialize the head rectangle if (normal.isEmpty()) &#123; // Save the normal layout position normal.set(inner.getLeft(), inner.getTop(), inner.getRight(), inner.getBottom()); &#125; // Move the layout inner.layout(inner.getLeft() + deltaX / 3, inner.getTop(), inner.getRight() + deltaX / 3, inner.getBottom()); left += (deltaX / 6); &#125; isCount = true; x = nowX; break; default: break; &#125; &#125; /** * Retract animation */ public void animation() &#123; TranslateAnimation taa = new TranslateAnimation(0, 0, left + 200, initLeft + 200); taa.setDuration(200); TranslateAnimation ta = null; // Turn on moving animation ta = new TranslateAnimation(inner.getLeft(), normal.left, 0, 0); ta.setDuration(200); inner.startAnimation(ta); // Set back to the normal layout position inner.layout(normal.left, normal.top, normal.right, normal.bottom); normal.setEmpty(); isCount = false; x = 0;// Fingers loose to 0.. &#125; // Whether you need to turn on animation public boolean isNeedAnimation() &#123; return !normal.isEmpty(); &#125; /*** * Whether you need to move the layout inner.getMeasuredHeight (): get the total height of the control * &lt;p&gt; * GetHeight (): Get the height of the screen. * * @return */ public void isNeedMove() &#123; int scrollY = getScrollY(); if (scrollY == 0) &#123; isMoveing = true; &#125; &#125; public void setContextView(View view) &#123; this.views = view; &#125;&#125; 这样就可以实现效果了。]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+        <tag>horizontalScrollView</tag>
+        <tag>view</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[TextView 默认字体大小]]></title>
+    <url>%2Fwanc%2F90854ebe.html</url>
+    <content type="text"><![CDATA[今天写代码的时候，突然来了兴致，TextView如果不指定textSize，那它的默认字体大小会是多少。 查看TextView源码：123456789101112 int textColorHighlight = 0; ColorStateList textColor = null; ColorStateList textColorHint = null; ColorStateList textColorLink = null; int textSize = 15;//默认字体 String fontFamily = null; boolean fontFamilyExplicit = false; int typefaceIndex = -1; int styleIndex = -1; boolean allCaps = false; int shadowcolor = 0; 答案是15，我们可以清晰的看到源码中的textSize为15，单位是sp。]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+        <tag>工具</tag>
+        <tag>TextView</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[adb idea的妙用]]></title>
+    <url>%2Fwanc%2Fcef1949d.html</url>
+    <content type="text"><![CDATA[在开发调试的时候，我们经常需要把当前项目app的数据清空，以测试用户第一次打开app时的情况。通常我们需要在设置里面通过好几步繁琐的操作才能完成。特别是在测试机器里面，因为demo太多，要找到自己的app很难。今天就来介绍一个能很快解决该问题的Android Studio插件：ADB IDEA。 ADB IDEA是一个开源项目，地址：https://github.com/pbreault/adb-idea 。里面有项目介绍以及安装方法。 安装依次打开references/Settings-&gt;Plugins-&gt;Browse Repositories，在输入框中输入adb，选择列表中的ADB Idea。点击安装。 使用可以使用Ctrl-Shift-A (or Ctrl-Alt-Shift-A on Linux and Windows),在弹出的对话框中直接输入adb找到相关的操作。 so easy~]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>工具</tag>
+        <tag>android studio</tag>
+        <tag>插件</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[android中tools的含义及用法]]></title>
+    <url>%2Fwanc%2F32079e2e.html</url>
+    <content type="text"><![CDATA[安卓开发中，在写布局代码的时候，ide可以看到布局的预览效果。但是有些效果则必须在运行之后才能看见。一般我们在xml中写死，等写完代码我就把这些东西一并删了。但是你可能会忘，以至于在你的最终产品中也会有这样的代码。 开始使用tools以上的情况是可以避免的，我们使用tools命名空间以及其属性来解决这个问题。 1xmlns:tools=&quot;http://schemas.android.com/tools&quot; tools可以告诉Android Studio，哪些属性在运行的时候是被忽略的，只在设计布局的时候有效。比如我们要让android:text属性只在布局预览中有效可以这样 123456&lt;TextView android:id=&quot;@+id/text_main&quot; android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;wrap_content&quot; android:layout_margin=&quot;@dimen/main_margin&quot; tools:text=&quot;I am a title&quot; /&gt; tools可以覆盖android的所有标准属性，将android:换成tools:即可。同时在运行的时候就连tools:本身都是被忽略的，不会被带进apk中。 tools属性的种类tools属性可以分为两种：一种是影响Lint提示的，一种是关于xml布局设计的。以上介绍的是tools的最基本用法：在UI设计的时候覆盖标准的android属性，属于第二种。下面介绍Lint相关的属性。 Lint相关的属性123tools:ignore tools:targetApi tools:locale tools:ignoreignore属性是告诉Lint忽略xml中的某些警告。 假设我们有这样的一个ImageView 1234567&lt;ImageView android:layout_width=&quot;wrap_content&quot; android:layout_height=&quot;wrap_content&quot; android:layout_marginStart=&quot;@dimen/margin_main&quot; android:layout_marginTop=&quot;@dimen/margin_main&quot; android:scaleType=&quot;center&quot; android:src=&quot;@drawable/divider&quot; /&gt; Lint会提示该ImageView缺少android:contentDescription属性。我们可以使用tools:ignore来忽略这个警告：12345678&lt;ImageView android:layout_width=&quot;wrap_content&quot; android:layout_height=&quot;wrap_content&quot; android:layout_marginStart=&quot;@dimen/margin_main&quot; android:layout_marginTop=&quot;@dimen/margin_main&quot; android:scaleType=&quot;center&quot; android:src=&quot;@drawable/divider&quot; tools:ignore=&quot;contentDescription&quot; /&gt; tools:targetApi假设minSdkLevel 15，而你使用了api21中的控件比如RippleDrawable 12&lt;ripple xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:color=&quot;@color/accent_color&quot; /&gt; 则Lint会提示警告。 为了不显示这个警告，可以：1234&lt;ripple xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; xmlns:tools=&quot;http://schemas.android.com/tools&quot; android:color=&quot;@color/accent_color&quot; tools:targetApi=&quot;LOLLIPOP&quot; /&gt; tools:locale（本地语言）属性默认情况下res/values/strings.xml中的字符串会执行拼写检查，如果不是英语，会提示拼写错误，通过以下代码来告诉studio本地语言不是英语，就不会有提示了。1234567&lt;resources xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; xmlns:tools=&quot;http://schemas.android.com/tools&quot; tools:locale=&quot;it&quot;&gt; &lt;!-- Your strings go here --&gt; &lt;/resources&gt; UI预览的其他属性（非android标准属性） tools:context tools:menu tools:actionBarNavMode tools:listitem/listheader/listfooter tools:showIn tools:layout tools:contextcontext属性其实正是的称呼是activity属性，有了这个属性，ide就知道在预览布局的时候该采用什么样的主题。同时他还可以在android studio的java代码中帮助找到相关的文件（Go to Related files）该属性的值是activity的完整包名123456789&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; xmlns:tools=&quot;http://schemas.android.com/tools&quot; android:id=&quot;@+id/container&quot; android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;match_parent&quot; android:orientation=&quot;vertical&quot; tools:context=&quot;com.android.example.MainActivity&quot;&gt; &lt;!-- ... --&gt; &lt;/LinearLayout&gt; tools:menu1、告诉IDE 在预览窗口中使用哪个菜单，这个菜单将显示在layout的根节点上（actionbar的位置）。 2、其实预览窗口非常智能，如果布局和一个activity关联（指上面所讲的用tools:context关联）它将会自动查询相关activity的onCreateOptionsMenu方法中的代码，以显示菜单。而menu属性则可以覆盖这种默认的行为。 3、你还可以为menu属性定义多个菜单资源，不同的菜单资源之间用逗号隔开。tools:menu=”menu_main,menu_edit”如果你不希望在预览图中显示菜单则：tools:menu=”” 4、最后需要注意，当主题为Theme.AppCompat时，这个属性不起作用。 tools:actionBarNavMode这个属性告诉ide app bar（Material中对actionbar的称呼）的显示模式，其值可以是 standard tabs list 123456&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; xmlns:tools=&quot;http://schemas.android.com/tools&quot; android:orientation=&quot;vertical&quot; android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;match_parent&quot; tools:actionBarNavMode=&quot;tabs&quot; /&gt; 同样的，当主题是Theme.AppCompat (r21+, at least) 或者Theme.Material,或者使用了布局包含Toolbar的方式。 该属性也不起作用，只有holo主题才有效。 listitem, listheader 和listfooter 属性 顾名思义就是在ListView ExpandableListView等的预览效果中添加头部 尾部 以及子item的预览布局。 1234567&lt;GridView android:id=&quot;@+id/list&quot; android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;wrap_content&quot; tools:listheader=&quot;@layout/list_header&quot; tools:listitem=&quot;@layout/list_item&quot; tools:listfooter=&quot;@layout/list_footer&quot; /&gt; tools:layouttools:layout告诉ide，Fragment在程序预览的时候该显示成什么样 123456789&lt;fragment xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; xmlns:tools=&quot;http://schemas.android.com/tools&quot; android:id=&quot;@+id/item_list&quot; android:name=&quot;com.example.fragmenttwopanel.ItemListFragment&quot; android:layout_width=&quot;match_parent&quot; android:layout_height=&quot;match_parent&quot; android:layout_marginLeft=&quot;16dp&quot; android:layout_marginRight=&quot;16dp&quot; tools:layout=&quot;@android:layout/list_content&quot; /&gt; tools:showIn该属性设置于一个被其他布局的布局的根元素上。这让您可以指向包含此布局的其中一个布局，在设计时这个被包含的布局会带着周围的外部布局被渲染。这将允许您“在上下文中”查看和编辑这个布局。需要 Studio 0.5.8 或更高版本。 关于tools 就介绍完了。]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+        <tag>工具</tag>
+        <tag>tools</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[适配Android不同机型，不同屏幕]]></title>
+    <url>%2Fwanc%2F4152288a.html</url>
+    <content type="text"><![CDATA[借鉴drawable文件夹，values使用dimens控制字体大小、边距大小，达到适配的效果。 分辨率说明首先查看密度 与分辨率的关系图 密度 ldpi mdpi hdpi xhdpi xxhdpi 密度值 120 160 240 320 480 代表分辨率 240*320 320*480 480*800 720*1280 1080*1920 创建不同的位图（Android官方介绍） xxxhdpi: 5.0 500*500 xxhdpi: 3.0 300*300 xhdpi：2.0 200*200 hdpi：1.5 150*150 mdpi：1.0（baseline） 100*100 ldpi：0.75 75*75 查看不同分辨率下图片的数值 文件夹名称 比例 图片大小 屏幕宽度 DPI值 分辨率举例 drawable-xxxhdpi 5.0 500*500 1440左右 640dpi 2560*1440（Nexus6） drawable-xxxhdpi 5.0 500*500 1440左右 640dpi 2560*1440（Nexus6） drawable-xxhdpi 3.0 300*300 1080左右 480dpi 1080*1920 drawable-xhdpi 2.0 200*200 720左右 320dpi 720*1280 drawable-hdpi 1.5 150*150 480左右 240dpi 480800,480854,540*960 drawable-mdpi 1.0（BaseLine） 100*100 360左右 160dpi 320*480 drawable-ldpi 0.75 75*75 240左右 - - values适配借鉴drawable文件夹，依次创建values，values-mdpi, values-hdpi，values-xhdpi, values-xxhdpi, values-xxxhdpi。 (鉴于现在ldpi的机型很少，就直接使用默认的values来做适配)。 文件夹名称 字体大小sp 距离大小dp 手机输出值（字体大小） 手机显示值（距离大小） values-xxxhdpi 50 50 175.0 175.0 values-xxhdpi 30 30 90.0 90.0 values-xhdpi 20 20 40.0 40.0 values-hdpi 15 15 22.5 22.5 values-hdpi(854*480) - - 25.87 22.5 values-mdpi 10 10 10.0 10.0 values-ldpi 7.5 7.5 5.625 5.625 至此结束啦~~]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+        <tag>适配</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[bitmap帮助手册]]></title>
+    <url>%2Fwanc%2Fbdd867b.html</url>
+    <content type="text"><![CDATA[收集整理了经常使用的关于bitmap的方法,包含按照图片的比例大小压缩、指定尺寸缩放和质量压缩。 压缩压缩可以有三种方式：1、比例压缩2、质量压缩3、比例压缩然后质量压缩 图片按比例大小压缩方法分成三种来源：1、来源为bitmap2、来源为Uri3、来源为图片地址（path） 直接压缩bitmap123456789101112131415161718192021222324252627282930313233343536373839404142434445/** * 图片按比例大小压缩方法 * * @param image （根据Bitmap图片压缩） * @return */ public static Bitmap compressScale(Bitmap image) &#123; ByteArrayOutputStream baos = new ByteArrayOutputStream(); image.compress(Bitmap.CompressFormat.JPEG, 100, baos); // 判断如果图片大于1M,进行压缩避免在生成图片（BitmapFactory.decodeStream）时溢出 if (baos.toByteArray().length / 1024 &gt; 1 * 1024) &#123; baos.reset();// 重置baos即清空baos image.compress(Bitmap.CompressFormat.JPEG, 80, baos);// 这里压缩50%，把压缩后的数据存放到baos中 &#125; ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray()); BitmapFactory.Options newOpts = new BitmapFactory.Options(); // 开始读入图片，此时把options.inJustDecodeBounds 设回true了 newOpts.inJustDecodeBounds = true; Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, newOpts); newOpts.inJustDecodeBounds = false; int w = newOpts.outWidth; int h = newOpts.outHeight; // 现在主流手机比较多是800*480分辨率，所以高和宽我们设置为 // float hh = 800f;// 这里设置高度为800f // float ww = 480f;// 这里设置宽度为480f float hh = 100f; float ww = 100f; // 缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可 int be = 1;// be=1表示不缩放 if (w &gt; h &amp;&amp; w &gt; ww) &#123;// 如果宽度大的话根据宽度固定大小缩放 be = (int) (newOpts.outWidth / ww); &#125; else if (w &lt; h &amp;&amp; h &gt; hh) &#123; // 如果高度高的话根据高度固定大小缩放 be = (int) (newOpts.outHeight / hh); &#125; if (be &lt;= 0) be = 1; newOpts.inSampleSize = be; // 设置缩放比例 // newOpts.inPreferredConfig = Config.RGB_565;//降低图片从ARGB888到RGB565 // 重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了 isBm = new ByteArrayInputStream(baos.toByteArray()); bitmap = BitmapFactory.decodeStream(isBm, null, newOpts); return compressImage(bitmap);// 压缩好比例大小后再进行质量压缩 //return bitmap; &#125; 通过uri获取图片并进行压缩12345678910111213141516171819202122232425262728293031323334353637383940/** * 通过uri获取图片并进行压缩 * * @param uri */ public static Bitmap getBitmapFormUri(Activity ac, Uri uri) throws FileNotFoundException, IOException &#123; InputStream input = ac.getContentResolver().openInputStream(uri); BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options(); onlyBoundsOptions.inJustDecodeBounds = true; onlyBoundsOptions.inDither = true;//optional onlyBoundsOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//optional BitmapFactory.decodeStream(input, null, onlyBoundsOptions); input.close(); int originalWidth = onlyBoundsOptions.outWidth; int originalHeight = onlyBoundsOptions.outHeight; if ((originalWidth == -1) || (originalHeight == -1)) return null; //图片分辨率以480x800为标准 float hh = 100f; float ww = 100f; //缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可 int be = 1;//be=1表示不缩放 if (originalWidth &gt; originalHeight &amp;&amp; originalWidth &gt; ww) &#123;//如果宽度大的话根据宽度固定大小缩放 be = (int) (originalWidth / ww); &#125; else if (originalWidth &lt; originalHeight &amp;&amp; originalHeight &gt; hh) &#123;//如果高度高的话根据宽度固定大小缩放 be = (int) (originalHeight / hh); &#125; if (be &lt;= 0) be = 1; //比例压缩 BitmapFactory.Options bitmapOptions = new BitmapFactory.Options(); bitmapOptions.inSampleSize = be;//设置缩放比例 bitmapOptions.inDither = true;//optional bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//optional input = ac.getContentResolver().openInputStream(uri); Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions); input.close(); return compressImage(bitmap);//再进行质量压缩 &#125; 通过path获取图片并进行压缩12345678910111213141516171819202122232425262728293031323334353637383940414243 /** * 通过path获取图片并进行压缩 * * @param path */ public static Bitmap getBitmapFormPath( String path) throws IOException &#123;// InputStream input = ac.getContentResolver().openInputStream(uri); File imgFile = new File(path); InputStream input = new FileInputStream(imgFile); BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options(); onlyBoundsOptions.inJustDecodeBounds = true; onlyBoundsOptions.inDither = true;//optional onlyBoundsOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//optional BitmapFactory.decodeStream(input, null, onlyBoundsOptions); input.close(); int originalWidth = onlyBoundsOptions.outWidth; int originalHeight = onlyBoundsOptions.outHeight; if ((originalWidth == -1) || (originalHeight == -1)) return null; //图片分辨率以480x800为标准 float hh = 100f; float ww = 100f; //缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可 int be = 1;//be=1表示不缩放 if (originalWidth &gt; originalHeight &amp;&amp; originalWidth &gt; ww) &#123;//如果宽度大的话根据宽度固定大小缩放 be = (int) (originalWidth / ww); &#125; else if (originalWidth &lt; originalHeight &amp;&amp; originalHeight &gt; hh) &#123;//如果高度高的话根据宽度固定大小缩放 be = (int) (originalHeight / hh); &#125; if (be &lt;= 0) be = 1; //比例压缩 BitmapFactory.Options bitmapOptions = new BitmapFactory.Options(); bitmapOptions.inSampleSize = be;//设置缩放比例 bitmapOptions.inDither = true;//optional bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//optional input = new FileInputStream(imgFile); Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions); input.close(); return compressImage(bitmap);//再进行质量压缩 &#125; 图片的缩放123456789101112131415161718192021222324252627/*** * 图片的缩放方法 * * @param bgimage * ：源图片资源 * @param newWidth * ：缩放后宽度 * @param newHeight * ：缩放后高度 * @return */ public static Bitmap zoomImage(Bitmap bgimage, double newWidth, double newHeight) &#123; // 获取这个图片的宽和高 float width = bgimage.getWidth(); float height = bgimage.getHeight(); // 创建操作图片用的matrix对象 Matrix matrix = new Matrix(); // 计算宽高缩放率 float scaleWidth = ((float) newWidth) / width; float scaleHeight = ((float) newHeight) / height; // 缩放图片动作 matrix.postScale(scaleWidth, scaleHeight); Bitmap bitmap = Bitmap.createBitmap(bgimage, 0, 0, (int) width, (int) height, matrix, true); return bitmap; &#125; 质量压缩方法1234567891011121314151617181920/** * 质量压缩方法 * * @param image * @return */ public static Bitmap compressImage(Bitmap image) &#123; ByteArrayOutputStream baos = new ByteArrayOutputStream(); image.compress(Bitmap.CompressFormat.JPEG, 100, baos);// 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中 int options = 90; while (baos.toByteArray().length / 1024 &gt; 1*3) &#123; // 循环判断如果压缩后图片是否大于100Kb,大于继续压缩 baos.reset(); // 重置baos即清空baos image.compress(Bitmap.CompressFormat.JPEG, options, baos);// 这里压缩options%，把压缩后的数据存放到baos中 options -= 10;// 每次都减少10 &#125; ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());// 把压缩后的数据baos存放到ByteArrayInputStream中 Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);// 把ByteArrayInputStream数据生成图片 return zoomImage(bitmap,100,100); &#125;]]></content>
+      <categories>
+        <category>android</category>
+      </categories>
+      <tags>
+        <tag>android</tag>
+        <tag>工具</tag>
+        <tag>bitmap</tag>
+      </tags>
+  </entry>
+</search>
